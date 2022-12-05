@@ -1,78 +1,4 @@
-function isBetween(x, y, z) {
-    return x <= z && z <= y;
-}
-
-function generateRange(x, y) {
-    var arr = [];
-    for (let i = x; i < y + 1; i++) {
-        arr.push(i);
-    }
-    return arr;
-}
-
-
-function Task1(input) {
-    var list = input.split('\n');
-    var sum = 0;
-    list.forEach(i => {
-        var ranges = i.split(',').map(j => {
-            var nums = j.split('-');
-            return generateRange(parseInt(nums[0]), parseInt(nums[1]))
-        });
-        var has = true;
-        for (const i of ranges[0]) {
-            var opossing = ranges[1];
-            var first = opossing[0];
-            var last = opossing[opossing.length - 1];
-            if (!isBetween(first, last, i)) has = false;
-        }
-        if (has) {
-            sum++;
-            return;
-        }
-        has = true;
-        for (const i of ranges[1]) {
-            var opossing = ranges[0];
-            var first = opossing[0];
-            var last = opossing[opossing.length - 1];
-            if (!isBetween(first, last, i)) has = false;
-        }
-        if (has) sum++;
-    })
-    return sum;
-}
-
-var test = `2-4,6-8
-2-3,4-5
-5-7,7-9
-2-8,3-7
-6-6,4-6
-2-6,4-8`;
-console.log(Task1(test));
-console.log(2);
-
-function Task2(input) {
-    var list = input.split('\n');
-    var sum = 0;
-    list.forEach(i => {
-        var ranges = i.split(',').map(j => {
-            var nums = j.split('-');
-            return generateRange(parseInt(nums[0]), parseInt(nums[1]))
-        });
-        for (const i of ranges[0]) {
-            var opossing = ranges[1];
-            if (opossing.includes(i)) {
-                sum++;
-                return;
-            }
-        }
-    });
-    return sum;
-}
-console.log(Task2(test));
-console.log(4);
-
-var real = `34-82,33-81
+34-82,33-81
 59-59,69-73
 6-96,98-99
 1-94,3-96
@@ -1071,5 +997,4 @@ var real = `34-82,33-81
 23-25,24-83
 19-86,13-18
 61-63,62-96
-24-63,57-80`;
-console.log(Task2(real));
+24-63,57-80

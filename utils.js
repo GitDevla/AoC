@@ -12,3 +12,7 @@ exports.test = (text, result, expected) => {
 exports.read = path => fs.readFileSync(path, 'utf-8');
 
 exports.sum = (arr) => arr.reduce((a, b) => parseInt(a) + parseInt(b))
+
+exports.mod = (n, m) => ((n % m) + m) % m;
+
+exports.last = (arr) => arr[arr.length - 1];
