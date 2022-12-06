@@ -3,7 +3,7 @@ const fs = require('fs');
 
 exports.test = (text, result, expected) => {
     if (result == expected) {
-        console.error(`\x1b[32m${text}: SUCCESS \x1b[0m`);
+        console.error(`\x1b[32m${text}: PASS \x1b[0m`);
     } else {
         console.error(`\x1b[31m${text}: FAIL\nResult: ${result}\nExpected: ${expected}\x1b[0m`);
     }
