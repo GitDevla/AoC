@@ -26,10 +26,10 @@ class CPU {
     draw() {
         var row = this.cycles % 40;
         if (row == 0) process.stdout.write("\n");
-        if (this.x - 1 == row) process.stdout.write("#");
-        else if (this.x == row) process.stdout.write("#");
-        else if (this.x + 1 == row) process.stdout.write("#");
-        else process.stdout.write(".");
+        if (this.x - 1 == row) process.stdout.write("█");
+        else if (this.x == row) process.stdout.write("█");
+        else if (this.x + 1 == row) process.stdout.write("█");
+        else process.stdout.write(" ");
     }
 
     calculateSignalStregth() {
