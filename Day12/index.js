@@ -14,10 +14,6 @@ class Cord {
         return this.y == cord.y && this.x == cord.x;
     }
 
-    isOpposite(cord) {
-        return this.y == cord.y * -1 && this.x == cord.x * -1;
-    }
-
     stringify() {
         return `${this.y},${this.x}`
     }
@@ -34,7 +30,6 @@ var dirs = [
 function getHeight(char) {
     return char.charCodeAt() - "a".charCodeAt();
 }
-
 
 function Parser(file) {
     let map = utils.read(file).split('\n').map(i => i.split(""));
@@ -55,111 +50,73 @@ function Parser(file) {
     }
     return { map: map, start: start, end: end };
 }
-// var foundPaths = [35]
-// function Seek(map, location, end, prev = new Cord(0, 0), oldheight = 0) {
-//     if (map[location.y] == undefined) return null;
-//     if (map[location.y][location.x] == undefined) return null;
-//     if (map[location.y][location.x] - 1 > oldheight) return null;
-//     if (location.is(end)) return 0;
-//     let seekMap = JSON.parse(JSON.stringify(map));
-//     seekMap[location.y][location.x] = null;
-//     // console.table(map);
-//     for (const dir of dirs) {
-//         if (!prev.isOpposite(dir)) {
-//             let res = Seek(seekMap, location.add(dir), end, dir, map[location.y][location.x]);
-//             if (res == null) continue;
-//             if (Math.min(...foundPaths) < 1 + res) continue;
-//             if (!location.is(new Cord(0, 0)))
-//                 return 1 + res;
-//             foundPaths.push(1 + parseInt(res))
 
-//         }
-//     }
-// }
-
-function neigbors(map, cord, visited) {
+function getNeighbors(map, cord) {
     var neigbors = [];
     for (const dir of dirs) {
         let next = cord.add(dir)
-        if (map[next.y] == undefined) continue
-        if (map[next.y][next.x] == undefined) continue
-        if (visited.has(next.stringify())) continue;
-        if (map[cord.y][cord.x] < map[next.y][next.x] - 1) continue;
+        if (map[next.y] == undefined) continue;
+        if (map[next.y][next.x] == undefined) continue;
         neigbors.push(next);
     }
     return neigbors;
 }
 
-function bfs(map, start, end) {
+function setAdd(set, objects) {
+    return objects.map(i => i.stringify()).forEach(i => set.add(i));
+}
+
+function PartOne({ map, start, end }) {
     let visited = new Set();
-    let queue = neigbors(map, start, visited);
-    queue.map(i => i.stringify()).forEach(i => visited.add(i));
+    let queue = getNeighbors(map, start);
+    queue = queue.filter(i => !(map[start.y][start.x] < map[i.y][i.x] - 1))
+    setAdd(visited, queue);
     let i = 1;
-    let found = false;
-    while (!found) {
+    while (true) {
         i++;
         let tempQue = []
         while (queue.length != 0) {
             let next = queue.shift(1);
-            let cords = neigbors(map, next, visited);
-            if (cords == null) continue;
-            if (cords.find(i => i.is(end))) found = true;
+            let cords = getNeighbors(map, next);
+            cords = cords.filter(i => !visited.has(i.stringify()))
+            cords = cords.filter(i => !(map[next.y][next.x] < map[i.y][i.x] - 1))
             tempQue.push(...cords)
-            tempQue.map(i => i.stringify()).forEach(i => visited.add(i));
+            setAdd(visited, tempQue);
+            if (cords.find(i => end.is(i))) return i;
         }
         queue.push(...tempQue)
+        if (queue.length == 0) return -1;
     }
-    return i;
 }
-
-
-
-function PartOne({ map, start, end }) {
-    return bfs(map, start, end);
-    // return Math.min(...foundPaths);
-}
-
-function neigbors2(map, cord, visited) {
-    var neigbors = [];
-    for (const dir of dirs) {
-        let next = cord.add(dir)
-        if (map[next.y] == undefined) continue
-        if (map[next.y][next.x] == undefined) continue
-        if (visited.has(next.stringify())) continue;
-        if (map[cord.y][cord.x] > map[next.y][next.x] + 1) continue;
-        neigbors.push(next);
-    }
-    return neigbors;
-}
-
 
 function PartTwo({ map, end }) {
     let start = end;
     let visited = new Set();
-    let queue = neigbors2(map, start, visited);
-    queue.map(i => i.stringify()).forEach(i => visited.add(i));
+    let queue = getNeighbors(map, start);
+    queue = queue.filter(i => !(map[start.y][start.x] > map[i.y][i.x] + 1))
+    setAdd(visited, queue);
     let i = 1;
-    let found = false;
-    while (!found) {
+    while (true) {
         i++;
         let tempQue = []
         while (queue.length != 0) {
             let next = queue.shift(1);
-            let cords = neigbors2(map, next, visited);
-            if (cords == null) continue;
-            if (cords.find(i => map[i.y][i.x] == 0)) found = true;
+            let cords = getNeighbors(map, next);
+            cords = cords.filter(i => !visited.has(i.stringify()))
+            cords = cords.filter(i => !(map[next.y][next.x] > map[i.y][i.x] + 1))
             tempQue.push(...cords)
-            tempQue.map(i => i.stringify()).forEach(i => visited.add(i));
+            setAdd(visited, tempQue);
+            if (cords.find(i => map[i.y][i.x] == 0)) return i;
         }
         queue.push(...tempQue)
+        if (queue.length == 0) return -1;
     }
-    return i;
 }
 
 // TESTS
 let testInput = Parser("test.txt");
 utils.test("Test 1", PartOne(testInput), 31);
-testInput = Parser("test.txt", true);
+testInput = Parser("test.txt");
 utils.test("Test 2", PartTwo(testInput), 29);
 
 // ANSWER
