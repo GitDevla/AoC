@@ -1,182 +1,57 @@
-## --- Day 14: Regolith Reservoir ---
+## --- Day 21: Monkey Math ---
 
-The distress signal leads you to a giant waterfall! Actually, hang on - the signal seems like it's coming from the waterfall itself, and that doesn't make any sense. However, you do notice a little path that leads _behind_ the waterfall.
+The monkeys are back! You're worried they're going to try to steal your stuff again, but it seems like they're just holding their ground and making various monkey noises at you.
 
-Correction: the distress signal leads you behind a giant waterfall! There seems to be a large cave system here, and the signal definitely leads further inside.
+Eventually, one of the elephants realizes you don't speak monkey and comes over to interpret. As it turns out, they overheard you talking about trying to find the grove; they can show you a shortcut if you answer their _riddle_.
 
-As you begin to make your way deeper underground, you feel the ground rumble for a moment. Sand begins pouring into the cave! If you don't quickly figure out where the sand is going, you could quickly become trapped!
+Each monkey is given a _job_: either to _yell a specific number_ or to _yell the result of a math operation_. All of the number-yelling monkeys know their number from the start; however, the math operation monkeys need to wait for two other monkeys to yell a number, and those two other monkeys might _also_ be waiting on other monkeys.
 
-Fortunately, your familiarity with analyzing the path of falling material will come in handy here. You scan a two-dimensional vertical slice of the cave above you (your puzzle input) and discover that it is mostly _air_ with structures made of _rock_.
+Your job is to _work out the number the monkey named `root` will yell_ before the monkeys figure it out themselves.
 
-Your scan traces the path of each solid rock structure and reports the `x,y` coordinates that form the shape of the path, where `x` represents distance to the right and `y` represents distance down. Each path appears as a single line of text in your scan. After the first point of each path, each point indicates the end of a straight horizontal or vertical line to be drawn from the previous point. For example:
-
-```
-498,4 -> 498,6 -> 496,6
-503,4 -> 502,4 -> 502,9 -> 494,9
-```
-
-This scan means that there are two paths of rock; the first path consists of two straight lines, and the second path consists of three straight lines. (Specifically, the first path consists of a line of rock from `498,4` through `498,6` and another line of rock from `498,6` through `496,6`.)
-
-The sand is pouring into the cave from point `500,0`.
-
-Drawing rock as `#`, air as `.`, and the source of the sand as `+`, this becomes:
+For example:
 
 ```
-
-  4     5  5
-  9     0  0
-  4     0  3
-0 ......+...
-1 ..........
-2 ..........
-3 ..........
-4 ....#...##
-5 ....#...#.
-6 ..###...#.
-7 ........#.
-8 ........#.
-9 #########.
+root: pppw + sjmn
+dbpl: 5
+cczh: sllz + lgvd
+zczc: 2
+ptdq: humn - dvpt
+dvpt: 3
+lfqf: 4
+humn: 5
+ljgn: 2
+sjmn: drzm * dbpl
+sllz: 4
+pppw: cczh / lfqf
+lgvd: ljgn * ptdq
+drzm: hmdt - zczc
+hmdt: 32
 ```
 
-Sand is produced _one unit at a time_, and the next unit of sand is not produced until the previous unit of sand _comes to rest_. A unit of sand is large enough to fill one tile of air in your scan.
+Each line contains the name of a monkey, a colon, and then the job of that monkey:
 
-A unit of sand always falls _down one step_ if possible. If the tile immediately below is blocked (by rock or sand), the unit of sand attempts to instead move diagonally _one step down and to the left_. If that tile is blocked, the unit of sand attempts to instead move diagonally _one step down and to the right_. Sand keeps moving as long as it is able to do so, at each step trying to move down, then down-left, then down-right. If all three possible destinations are blocked, the unit of sand _comes to rest_ and no longer moves, at which point the next unit of sand is created back at the source.
+-   A lone number means the monkey's job is simply to yell that number.
+-   A job like `aaaa + bbbb` means the monkey waits for monkeys `aaaa` and `bbbb` to yell each of their numbers; the monkey then yells the sum of those two numbers.
+-   `aaaa - bbbb` means the monkey yells `aaaa`'s number minus `bbbb`'s number.
+-   Job `aaaa * bbbb` will yell `aaaa`'s number multiplied by `bbbb`'s number.
+-   Job `aaaa / bbbb` will yell `aaaa`'s number divided by `bbbb`'s number.
 
-So, drawing sand that has come to rest as `o`, the first unit of sand simply falls straight down and then stops:
+So, in the above example, monkey `drzm` has to wait for monkeys `hmdt` and `zczc` to yell their numbers. Fortunately, both `hmdt` and `zczc` have jobs that involve simply yelling a single number, so they do this immediately: `32` and `2`. Monkey `drzm` can then yell its number by finding `32` minus `2`: `_30_`.
 
-```
-......+...
-..........
-..........
-..........
-....#...##
-....#...#.
-..###...#.
-........#.
-......o.#.
-#########.
-```
+Then, monkey `sjmn` has one of its numbers (`30`, from monkey `drzm`), and already has its other number, `5`, from `dbpl`. This allows it to yell its own number by finding `30` multiplied by `5`: `_150_`.
 
-The second unit of sand then falls straight down, lands on the first one, and then comes to rest to its left:
+This process continues until `root` yells a number: `_152_`.
 
-```
-......+...
-..........
-..........
-..........
-....#...##
-....#...#.
-..###...#.
-........#.
-.....oo.#.
-#########.
-```
-
-After a total of five units of sand have come to rest, they form this pattern:
-
-```
-......+...
-..........
-..........
-..........
-....#...##
-....#...#.
-..###...#.
-......o.#.
-....oooo#.
-#########.
-```
-
-After a total of 22 units of sand:
-
-```
-......+...
-..........
-......o...
-.....ooo..
-....#ooo##
-....#ooo#.
-..###ooo#.
-....oooo#.
-...ooooo#.
-#########.
-```
-
-Finally, only two more units of sand can possibly come to rest:
-
-```
-......+...
-..........
-......o...
-.....ooo..
-....#ooo##
-...o#ooo#.
-..###ooo#.
-....oooo#.
-.o.ooooo#.
-#########.
-```
-
-Once all _`24`_ units of sand shown above have come to rest, all further sand flows out the bottom, falling into the endless void. Just for fun, the path any new sand takes before falling forever is shown here with `~`:
-
-```
-.......+...
-.......~...
-......~o...
-.....~ooo..
-....~#ooo##
-...~o#ooo#.
-..~###ooo#.
-..~..oooo#.
-.~o.ooooo#.
-~#########.
-~..........
-~..........
-~..........
-```
-
-Using your scan, simulate the falling sand. _How many units of sand come to rest before sand starts flowing into the abyss below?_
-
-Your puzzle answer was `885`.
+However, your actual situation involves considerably more monkeys. _What number will the monkey named `root` yell?_
 
 ## --- Part Two ---
 
-You realize you misread the scan. There isn't an endless void at the bottom of the scan - there's floor, and you're standing on it!
+Due to some kind of monkey-elephant-human mistranslation, you seem to have misunderstood a few key details about the riddle.
 
-You don't have time to scan the floor, so assume the floor is an infinite horizontal line with a `y` coordinate equal to _two plus the highest `y` coordinate_ of any point in your scan.
+First, you got the wrong job for the monkey named `root`; specifically, you got the wrong math operation. The correct operation for monkey `root` should be `=`, which means that it still listens for two numbers (from the same two monkeys as before), but now checks that the two numbers _match_.
 
-In the example above, the highest `y` coordinate of any point is `9`, and so the floor is at `y=11`. (This is as if your scan contained one extra rock path like `-infinity,11 -> infinity,11`.) With the added floor, the example above now looks like this:
+Second, you got the wrong monkey for the job starting with `humn:`. It isn't a monkey - it's _you_. Actually, you got the job wrong, too: you need to figure out _what number you need to yell_ so that `root`'s equality check passes. (The number that appears after `humn:` in your input is now irrelevant.)
 
-```
-        ...........+........
-        ....................
-        ....................
-        ....................
-        .........#...##.....
-        .........#...#......
-        .......###...#......
-        .............#......
-        .............#......
-        .....#########......
-        ....................
-<-- etc #################### etc -->
-```
+In the above example, the number you need to yell to pass `root`'s equality test is `_301_`. (This causes `root` to get the same number, `150`, from both of its monkeys.)
 
-To find somewhere safe to stand, you'll need to simulate falling sand until a unit of sand comes to rest at `500,0`, blocking the source entirely and stopping the flow of sand into the cave. In the example above, the situation finally looks like this after _`93`_ units of sand come to rest:
-
-```
-............o............
-...........ooo...........
-..........ooooo..........
-.........ooooooo.........
-........oo#ooo##o........
-.......ooo#ooo#ooo.......
-......oo###ooo#oooo......
-.....oooo.oooo#ooooo.....
-....oooooooooo#oooooo....
-...ooo#########ooooooo...
-..ooooo.......ooooooooo..
-#########################
-```
-
-Using your scan, simulate the falling sand until the source of the sand becomes blocked. _How many units of sand come to rest?_
+_What number do you yell to pass `root`'s equality test?_

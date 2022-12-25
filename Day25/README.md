@@ -1,182 +1,103 @@
-## --- Day 14: Regolith Reservoir ---
+## --- Day 25: Full of Hot Air ---
 
-The distress signal leads you to a giant waterfall! Actually, hang on - the signal seems like it's coming from the waterfall itself, and that doesn't make any sense. However, you do notice a little path that leads _behind_ the waterfall.
+As the expedition finally reaches the extraction point, several large hot air balloons drift down to meet you. Crews quickly start unloading the equipment the balloons brought: many hot air balloon kits, some fuel tanks, and a _fuel heating machine_.
 
-Correction: the distress signal leads you behind a giant waterfall! There seems to be a large cave system here, and the signal definitely leads further inside.
+The fuel heating machine is a new addition to the process. When this mountain was a volcano, the ambient temperature was more reasonable; now, it's so cold that the fuel won't work at all without being warmed up first.
 
-As you begin to make your way deeper underground, you feel the ground rumble for a moment. Sand begins pouring into the cave! If you don't quickly figure out where the sand is going, you could quickly become trapped!
+The Elves, seemingly in an attempt to make the new machine feel welcome, have already attached a pair of googly eyes and started calling it "Bob".
 
-Fortunately, your familiarity with analyzing the path of falling material will come in handy here. You scan a two-dimensional vertical slice of the cave above you (your puzzle input) and discover that it is mostly _air_ with structures made of _rock_.
+To heat the fuel, Bob needs to know the total amount of fuel that will be processed ahead of time so it can correctly calibrate heat output and flow rate. This amount is simply the _sum_ of the fuel requirements of all of the hot air balloons, and those fuel requirements are even listed clearly on the side of each hot air balloon's burner.
 
-Your scan traces the path of each solid rock structure and reports the `x,y` coordinates that form the shape of the path, where `x` represents distance to the right and `y` represents distance down. Each path appears as a single line of text in your scan. After the first point of each path, each point indicates the end of a straight horizontal or vertical line to be drawn from the previous point. For example:
+You assume the Elves will have no trouble adding up some numbers and are about to go back to figuring out which balloon is yours when you get a tap on the shoulder. Apparently, the fuel requirements use numbers written in a format the Elves don't recognize; predictably, they'd like your help deciphering them.
 
-```
-498,4 -> 498,6 -> 496,6
-503,4 -> 502,4 -> 502,9 -> 494,9
-```
-
-This scan means that there are two paths of rock; the first path consists of two straight lines, and the second path consists of three straight lines. (Specifically, the first path consists of a line of rock from `498,4` through `498,6` and another line of rock from `498,6` through `496,6`.)
-
-The sand is pouring into the cave from point `500,0`.
-
-Drawing rock as `#`, air as `.`, and the source of the sand as `+`, this becomes:
+You make a list of all of the fuel requirements (your puzzle input), but you don't recognize the number format either. For example:
 
 ```
-
-  4     5  5
-  9     0  0
-  4     0  3
-0 ......+...
-1 ..........
-2 ..........
-3 ..........
-4 ....#...##
-5 ....#...#.
-6 ..###...#.
-7 ........#.
-8 ........#.
-9 #########.
+1=-0-2
+12111
+2=0=
+21
+2=01
+111
+20012
+112
+1=-1=
+1-12
+12
+1=
+122
 ```
 
-Sand is produced _one unit at a time_, and the next unit of sand is not produced until the previous unit of sand _comes to rest_. A unit of sand is large enough to fill one tile of air in your scan.
+Fortunately, Bob is labeled with a support phone number. Not to be deterred, you call and ask for help.
 
-A unit of sand always falls _down one step_ if possible. If the tile immediately below is blocked (by rock or sand), the unit of sand attempts to instead move diagonally _one step down and to the left_. If that tile is blocked, the unit of sand attempts to instead move diagonally _one step down and to the right_. Sand keeps moving as long as it is able to do so, at each step trying to move down, then down-left, then down-right. If all three possible destinations are blocked, the unit of sand _comes to rest_ and no longer moves, at which point the next unit of sand is created back at the source.
+"That's right, just supply the fuel amount to the-- oh, for more than one burner? No problem, you just need to add together our Special Numeral-Analogue Fuel Units. Patent pending! They're way better than normal numbers for--"
 
-So, drawing sand that has come to rest as `o`, the first unit of sand simply falls straight down and then stops:
+You mention that it's quite cold up here and ask if they can skip ahead.
 
-```
-......+...
-..........
-..........
-..........
-....#...##
-....#...#.
-..###...#.
-........#.
-......o.#.
-#########.
-```
+"Okay, our Special Numeral-Analogue Fuel Units - SNAFU for short - are sort of like normal numbers. You know how starting on the right, normal numbers have a ones place, a tens place, a hundreds place, and so on, where the digit in each place tells you how many of that value you have?"
 
-The second unit of sand then falls straight down, lands on the first one, and then comes to rest to its left:
+"SNAFU works the same way, except it uses powers of five instead of ten. Starting from the right, you have a ones place, a fives place, a twenty-fives place, a one-hundred-and-twenty-fives place, and so on. It's that easy!"
 
-```
-......+...
-..........
-..........
-..........
-....#...##
-....#...#.
-..###...#.
-........#.
-.....oo.#.
-#########.
-```
+You ask why some of the digits look like `-` or `=` instead of "digits".
 
-After a total of five units of sand have come to rest, they form this pattern:
+"You know, I never did ask the engineers why they did that. Instead of using digits four through zero, the digits are `_2_`, `_1_`, `_0_`, _minus_ (written `-`), and _double-minus_ (written `=`). Minus is worth -1, and double-minus is worth -2."
+
+"So, because ten (in normal numbers) is two fives and no ones, in SNAFU it is written `20`. Since eight (in normal numbers) is two fives minus two ones, it is written `2=`."
+
+"You can do it the other direction, too. Say you have the SNAFU number `2=-01`. That's `2` in the 625s place, `=` (double-minus) in the 125s place, `-` (minus) in the 25s place, `0` in the 5s place, and `1` in the 1s place. (2 times 625) plus (-2 times 125) plus (-1 times 25) plus (0 times 5) plus (1 times 1). That's 1250 plus -250 plus -25 plus 0 plus 1. _976_!"
+
+"I see here that you're connected via our premium uplink service, so I'll transmit our handy SNAFU brochure to you now. Did you need anything else?"
+
+You ask if the fuel will even work in these temperatures.
+
+"Wait, it's _how_ cold? There's no _way_ the fuel - or _any_ fuel - would work in those conditions! There are only a few places in the-- where did you say you are again?"
+
+Just then, you notice one of the Elves pour a few drops from a snowflake-shaped container into one of the fuel tanks, thank the support representative for their time, and disconnect the call.
+
+The SNAFU brochure contains a few more examples of decimal ("normal") numbers and their SNAFU counterparts:
 
 ```
-......+...
-..........
-..........
-..........
-....#...##
-....#...#.
-..###...#.
-......o.#.
-....oooo#.
-#########.
+  Decimal          SNAFU
+        1              1
+        2              2
+        3             1=
+        4             1-
+        5             10
+        6             11
+        7             12
+        8             2=
+        9             2-
+       10             20
+       15            1=0
+       20            1-0
+     2022         1=11-2
+    12345        1-0---0
+314159265  1121-1110-1=0
 ```
 
-After a total of 22 units of sand:
+Based on this process, the SNAFU numbers in the example above can be converted to decimal numbers as follows:
 
 ```
-......+...
-..........
-......o...
-.....ooo..
-....#ooo##
-....#ooo#.
-..###ooo#.
-....oooo#.
-...ooooo#.
-#########.
+ SNAFU  Decimal
+1=-0-2     1747
+ 12111      906
+  2=0=      198
+    21       11
+  2=01      201
+   111       31
+ 20012     1257
+   112       32
+ 1=-1=      353
+  1-12      107
+    12        7
+    1=        3
+   122       37
 ```
 
-Finally, only two more units of sand can possibly come to rest:
+In decimal, the sum of these numbers is `4890`.
 
-```
-......+...
-..........
-......o...
-.....ooo..
-....#ooo##
-...o#ooo#.
-..###ooo#.
-....oooo#.
-.o.ooooo#.
-#########.
-```
+As you go to input this number on Bob's console, you discover that some buttons you expected are missing. Instead, you are met with buttons labeled `=`, `-`, `0`, `1`, and `2`. Bob needs the input value expressed as a SNAFU number, not in decimal.
 
-Once all _`24`_ units of sand shown above have come to rest, all further sand flows out the bottom, falling into the endless void. Just for fun, the path any new sand takes before falling forever is shown here with `~`:
+Reversing the process, you can determine that for the decimal number `4890`, the SNAFU number you need to supply to Bob's console is `_2=-1=0_`.
 
-```
-.......+...
-.......~...
-......~o...
-.....~ooo..
-....~#ooo##
-...~o#ooo#.
-..~###ooo#.
-..~..oooo#.
-.~o.ooooo#.
-~#########.
-~..........
-~..........
-~..........
-```
-
-Using your scan, simulate the falling sand. _How many units of sand come to rest before sand starts flowing into the abyss below?_
-
-Your puzzle answer was `885`.
-
-## --- Part Two ---
-
-You realize you misread the scan. There isn't an endless void at the bottom of the scan - there's floor, and you're standing on it!
-
-You don't have time to scan the floor, so assume the floor is an infinite horizontal line with a `y` coordinate equal to _two plus the highest `y` coordinate_ of any point in your scan.
-
-In the example above, the highest `y` coordinate of any point is `9`, and so the floor is at `y=11`. (This is as if your scan contained one extra rock path like `-infinity,11 -> infinity,11`.) With the added floor, the example above now looks like this:
-
-```
-        ...........+........
-        ....................
-        ....................
-        ....................
-        .........#...##.....
-        .........#...#......
-        .......###...#......
-        .............#......
-        .............#......
-        .....#########......
-        ....................
-<-- etc #################### etc -->
-```
-
-To find somewhere safe to stand, you'll need to simulate falling sand until a unit of sand comes to rest at `500,0`, blocking the source entirely and stopping the flow of sand into the cave. In the example above, the situation finally looks like this after _`93`_ units of sand come to rest:
-
-```
-............o............
-...........ooo...........
-..........ooooo..........
-.........ooooooo.........
-........oo#ooo##o........
-.......ooo#ooo#ooo.......
-......oo###ooo#oooo......
-.....oooo.oooo#ooooo.....
-....oooooooooo#oooooo....
-...ooo#########ooooooo...
-..ooooo.......ooooooooo..
-#########################
-```
-
-Using your scan, simulate the falling sand until the source of the sand becomes blocked. _How many units of sand come to rest?_
+The Elves are starting to get cold. _What SNAFU number do you supply to Bob's console?_

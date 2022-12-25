@@ -1,182 +1,111 @@
-## --- Day 14: Regolith Reservoir ---
+## --- Day 20: Grove Positioning System ---
 
-The distress signal leads you to a giant waterfall! Actually, hang on - the signal seems like it's coming from the waterfall itself, and that doesn't make any sense. However, you do notice a little path that leads _behind_ the waterfall.
+It's finally time to meet back up with the Elves. When you try to contact them, however, you get no reply. Perhaps you're out of range?
 
-Correction: the distress signal leads you behind a giant waterfall! There seems to be a large cave system here, and the signal definitely leads further inside.
+You know they're headed to the grove where the _star_ fruit grows, so if you can figure out where that is, you should be able to meet back up with them.
 
-As you begin to make your way deeper underground, you feel the ground rumble for a moment. Sand begins pouring into the cave! If you don't quickly figure out where the sand is going, you could quickly become trapped!
+Fortunately, your handheld device has a file (your puzzle input) that contains the grove's coordinates! Unfortunately, the file is _encrypted_ - just in case the device were to fall into the wrong hands.
 
-Fortunately, your familiarity with analyzing the path of falling material will come in handy here. You scan a two-dimensional vertical slice of the cave above you (your puzzle input) and discover that it is mostly _air_ with structures made of _rock_.
+Maybe you can decrypt it?
 
-Your scan traces the path of each solid rock structure and reports the `x,y` coordinates that form the shape of the path, where `x` represents distance to the right and `y` represents distance down. Each path appears as a single line of text in your scan. After the first point of each path, each point indicates the end of a straight horizontal or vertical line to be drawn from the previous point. For example:
+When you were still back at the camp, you overheard some Elves talking about coordinate file encryption. The main operation involved in decrypting the file is called _mixing_.
 
-```
-498,4 -> 498,6 -> 496,6
-503,4 -> 502,4 -> 502,9 -> 494,9
-```
+The encrypted file is a list of numbers. To _mix_ the file, move each number forward or backward in the file a number of positions equal to the value of the number being moved. The list is _circular_, so moving a number off one end of the list wraps back around to the other end as if the ends were connected.
 
-This scan means that there are two paths of rock; the first path consists of two straight lines, and the second path consists of three straight lines. (Specifically, the first path consists of a line of rock from `498,4` through `498,6` and another line of rock from `498,6` through `496,6`.)
+For example, to move the `1` in a sequence like `4, 5, 6, _1_, 7, 8, 9`, the `1` moves one position forward: `4, 5, 6, 7, _1_, 8, 9`. To move the `-2` in a sequence like `4, _-2_, 5, 6, 7, 8, 9`, the `-2` moves two positions backward, wrapping around: `4, 5, 6, 7, 8, _-2_, 9`.
 
-The sand is pouring into the cave from point `500,0`.
+The numbers should be moved _in the order they originally appear_ in the encrypted file. Numbers moving around during the mixing process do not change the order in which the numbers are moved.
 
-Drawing rock as `#`, air as `.`, and the source of the sand as `+`, this becomes:
+Consider this encrypted file:
 
 ```
-
-  4     5  5
-  9     0  0
-  4     0  3
-0 ......+...
-1 ..........
-2 ..........
-3 ..........
-4 ....#...##
-5 ....#...#.
-6 ..###...#.
-7 ........#.
-8 ........#.
-9 #########.
+1
+2
+-3
+3
+-2
+0
+4
 ```
 
-Sand is produced _one unit at a time_, and the next unit of sand is not produced until the previous unit of sand _comes to rest_. A unit of sand is large enough to fill one tile of air in your scan.
-
-A unit of sand always falls _down one step_ if possible. If the tile immediately below is blocked (by rock or sand), the unit of sand attempts to instead move diagonally _one step down and to the left_. If that tile is blocked, the unit of sand attempts to instead move diagonally _one step down and to the right_. Sand keeps moving as long as it is able to do so, at each step trying to move down, then down-left, then down-right. If all three possible destinations are blocked, the unit of sand _comes to rest_ and no longer moves, at which point the next unit of sand is created back at the source.
-
-So, drawing sand that has come to rest as `o`, the first unit of sand simply falls straight down and then stops:
+Mixing this file proceeds as follows:
 
 ```
-......+...
-..........
-..........
-..........
-....#...##
-....#...#.
-..###...#.
-........#.
-......o.#.
-#########.
+Initial arrangement:
+1, 2, -3, 3, -2, 0, 4
+
+1 moves between 2 and -3:
+2, 1, -3, 3, -2, 0, 4
+
+2 moves between -3 and 3:
+1, -3, 2, 3, -2, 0, 4
+
+-3 moves between -2 and 0:
+1, 2, 3, -2, -3, 0, 4
+
+3 moves between 0 and 4:
+1, 2, -2, -3, 0, 3, 4
+
+-2 moves between 4 and 1:
+1, 2, -3, 0, 3, 4, -2
+
+0 does not move:
+1, 2, -3, 0, 3, 4, -2
+
+4 moves between -3 and 0:
+1, 2, -3, 4, 0, 3, -2
 ```
 
-The second unit of sand then falls straight down, lands on the first one, and then comes to rest to its left:
+Then, the grove coordinates can be found by looking at the 1000th, 2000th, and 3000th numbers after the value `0`, wrapping around the list as necessary. In the above example, the 1000th number after `0` is `_4_`, the 2000th is `_-3_`, and the 3000th is `_2_`; adding these together produces `_3_`.
 
-```
-......+...
-..........
-..........
-..........
-....#...##
-....#...#.
-..###...#.
-........#.
-.....oo.#.
-#########.
-```
+Mix your encrypted file exactly once. _What is the sum of the three numbers that form the grove coordinates?_
 
-After a total of five units of sand have come to rest, they form this pattern:
-
-```
-......+...
-..........
-..........
-..........
-....#...##
-....#...#.
-..###...#.
-......o.#.
-....oooo#.
-#########.
-```
-
-After a total of 22 units of sand:
-
-```
-......+...
-..........
-......o...
-.....ooo..
-....#ooo##
-....#ooo#.
-..###ooo#.
-....oooo#.
-...ooooo#.
-#########.
-```
-
-Finally, only two more units of sand can possibly come to rest:
-
-```
-......+...
-..........
-......o...
-.....ooo..
-....#ooo##
-...o#ooo#.
-..###ooo#.
-....oooo#.
-.o.ooooo#.
-#########.
-```
-
-Once all _`24`_ units of sand shown above have come to rest, all further sand flows out the bottom, falling into the endless void. Just for fun, the path any new sand takes before falling forever is shown here with `~`:
-
-```
-.......+...
-.......~...
-......~o...
-.....~ooo..
-....~#ooo##
-...~o#ooo#.
-..~###ooo#.
-..~..oooo#.
-.~o.ooooo#.
-~#########.
-~..........
-~..........
-~..........
-```
-
-Using your scan, simulate the falling sand. _How many units of sand come to rest before sand starts flowing into the abyss below?_
-
-Your puzzle answer was `885`.
 
 ## --- Part Two ---
 
-You realize you misread the scan. There isn't an endless void at the bottom of the scan - there's floor, and you're standing on it!
+The grove coordinate values seem nonsensical. While you ponder the mysteries of Elf encryption, you suddenly remember the rest of the decryption routine you overheard back at camp.
 
-You don't have time to scan the floor, so assume the floor is an infinite horizontal line with a `y` coordinate equal to _two plus the highest `y` coordinate_ of any point in your scan.
+First, you need to apply the _decryption key_, `811589153`. Multiply each number by the decryption key before you begin; this will produce the actual list of numbers to mix.
 
-In the example above, the highest `y` coordinate of any point is `9`, and so the floor is at `y=11`. (This is as if your scan contained one extra rock path like `-infinity,11 -> infinity,11`.) With the added floor, the example above now looks like this:
+Second, you need to mix the list of numbers _ten times_. The order in which the numbers are mixed does not change during mixing; the numbers are still moved in the order they appeared in the original, pre-mixed list. (So, if -3 appears fourth in the original list of numbers to mix, -3 will be the fourth number to move during each round of mixing.)
 
-```
-        ...........+........
-        ....................
-        ....................
-        ....................
-        .........#...##.....
-        .........#...#......
-        .......###...#......
-        .............#......
-        .............#......
-        .....#########......
-        ....................
-<-- etc #################### etc -->
-```
-
-To find somewhere safe to stand, you'll need to simulate falling sand until a unit of sand comes to rest at `500,0`, blocking the source entirely and stopping the flow of sand into the cave. In the example above, the situation finally looks like this after _`93`_ units of sand come to rest:
+Using the same example as above:
 
 ```
-............o............
-...........ooo...........
-..........ooooo..........
-.........ooooooo.........
-........oo#ooo##o........
-.......ooo#ooo#ooo.......
-......oo###ooo#oooo......
-.....oooo.oooo#ooooo.....
-....oooooooooo#oooooo....
-...ooo#########ooooooo...
-..ooooo.......ooooooooo..
-#########################
+Initial arrangement:
+811589153, 1623178306, -2434767459, 2434767459, -1623178306, 0, 3246356612
+
+After 1 round of mixing:
+0, -2434767459, 3246356612, -1623178306, 2434767459, 1623178306, 811589153
+
+After 2 rounds of mixing:
+0, 2434767459, 1623178306, 3246356612, -2434767459, -1623178306, 811589153
+
+After 3 rounds of mixing:
+0, 811589153, 2434767459, 3246356612, 1623178306, -1623178306, -2434767459
+
+After 4 rounds of mixing:
+0, 1623178306, -2434767459, 811589153, 2434767459, 3246356612, -1623178306
+
+After 5 rounds of mixing:
+0, 811589153, -1623178306, 1623178306, -2434767459, 3246356612, 2434767459
+
+After 6 rounds of mixing:
+0, 811589153, -1623178306, 3246356612, -2434767459, 1623178306, 2434767459
+
+After 7 rounds of mixing:
+0, -2434767459, 2434767459, 1623178306, -1623178306, 811589153, 3246356612
+
+After 8 rounds of mixing:
+0, 1623178306, 3246356612, 811589153, -2434767459, 2434767459, -1623178306
+
+After 9 rounds of mixing:
+0, 811589153, 1623178306, -2434767459, 3246356612, 2434767459, -1623178306
+
+After 10 rounds of mixing:
+0, -2434767459, 1623178306, 3246356612, -1623178306, 2434767459, 811589153
 ```
 
-Using your scan, simulate the falling sand until the source of the sand becomes blocked. _How many units of sand come to rest?_
+The grove coordinates can still be found in the same way. Here, the 1000th number after `0` is `_811589153_`, the 2000th is `_2434767459_`, and the 3000th is `_-1623178306_`; adding these together produces `_1623178306_`.
+
+Apply the decryption key and mix your encrypted file ten times. _What is the sum of the three numbers that form the grove coordinates?_
