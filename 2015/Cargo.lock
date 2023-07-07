@@ -5,3 +5,14 @@ version = 3
 [[package]]
 name = "aoc2015"
 version = "0.1.0"
+
+[[package]]
+name = "common"
+version = "0.1.0"
+
+[[package]]
+name = "day01"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
