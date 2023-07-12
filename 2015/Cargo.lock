@@ -47,6 +47,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "day06"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
 name = "md5"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
