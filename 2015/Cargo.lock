@@ -54,14 +54,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "day07"
+name = "day08"
 version = "0.1.0"
 dependencies = [
  "common",
 ]
 
 [[package]]
-name = "day08"
+name = "day10"
 version = "0.1.0"
 dependencies = [
  "common",
