@@ -34,7 +34,7 @@ fn pt2() {
     println!("Task 1 solution: {ans}");
 }
 
-#[warn(unused_assignments)]
+#[allow(unused_assignments)]
 fn task1(s: String) -> usize {
     let code = s.len();
     let mut memory = 0;
@@ -50,7 +50,7 @@ fn task1(s: String) -> usize {
             if c.1 == HEX_NOTATION {
                 indice.next();
                 indice.next();
-                break_mode = false; // tf you mean unused
+                break_mode = false;
             }
             break_mode = false;
             continue;

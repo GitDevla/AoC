@@ -30,6 +30,6 @@ fn pt2() {
     println!("Task 2 solution: {ans}");
 }
 
-fn task1(input: String) -> i32 {}
+fn task1(input: String) -> () {}
 
-fn task2(input: String) -> i32 {}
+fn task2(input: String) -> () {}

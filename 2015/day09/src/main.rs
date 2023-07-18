@@ -1,4 +1,4 @@
-use std::{collections::HashMap, path};
+use std::collections::HashMap;
 
 use common;
 const INPUT_FILE: &str = "input/day09.txt";

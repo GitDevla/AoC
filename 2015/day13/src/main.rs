@@ -93,12 +93,12 @@ fn calc_dist(graph: &HashMap<String, Vec<(String, i8)>>, path: &Vec<String>) -> 
 }
 
 fn task2(input: HashMap<String, Vec<(String, i8)>>) -> i32 {
-    let MY_NAME: String = "GitDevla".to_string();
+    let my_name: String = "GitDevla".to_string();
     let mut new = input;
     let everyonw: Vec<(String, i8)> = new.keys().map(|c: &String| (c.clone(), 0_i8)).collect();
     new.values_mut()
-        .for_each(|f: &mut Vec<(String, i8)>| f.push((MY_NAME.clone(), 0_i8)));
-    new.insert(MY_NAME.clone(), everyonw);
+        .for_each(|f: &mut Vec<(String, i8)>| f.push((my_name.clone(), 0_i8)));
+    new.insert(my_name.clone(), everyonw);
     let seats = vec![new
         .keys()
         .collect::<Vec<&String>>()
