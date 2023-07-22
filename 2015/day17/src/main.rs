@@ -1,7 +1,4 @@
-use std::{
-    collections::{HashMap, HashSet},
-    vec,
-};
+use std::{collections::HashMap, vec};
 
 use common;
 const INPUT_FILE: &str = "input/day17.txt";
