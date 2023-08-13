@@ -5,3 +5,13 @@ pub fn read_file(filename: &str) -> Vec<String> {
     let conents = file.lines().map(String::from).collect();
     return conents;
 }
+
+pub fn benchmark(function: fn()) {
+    use std::time::Instant;
+    let now = Instant::now();
+
+    function();
+
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
+}
