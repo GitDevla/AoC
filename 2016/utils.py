@@ -5,6 +5,12 @@ def read_file(path: str):
     return lines
 
 
+def read_test(string: str):
+    lines = string.splitlines()
+    lines = [x.strip() for x in lines]
+    return lines
+
+
 def test(output, expected):
     from colorama import Fore
 
