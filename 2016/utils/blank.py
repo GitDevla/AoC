@@ -42,5 +42,5 @@ def task2(input):
 
 
 if __name__ == "__main__":
-    # benchmark(main())
+    # benchmark(main)
     main()
