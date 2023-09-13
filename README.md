@@ -6,4 +6,5 @@ My [Advent of Code](https://adventofcode.com) solutions written in whatever I wa
 |:--------:|----------------|:------------:|:---------:|
 | **2015** | 50 ⭐          |     Rust     |   23/07   |
 | **2016** | 50 ⭐          |    Python    |   23/08   |
+| **2017** | In Progress... |    Python    |   23/08   |
 | **2022** | 37 ⭐          |  Javascript  |   22/12   |
