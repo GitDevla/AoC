@@ -5,6 +5,13 @@ def read_file(path: str):
     return lines
 
 
+def read_file_raw(path: str):
+    f = open(path, "r")
+    lines = f.readlines()
+    lines = [x for x in lines]
+    return lines
+
+
 def read_test(string: str):
     lines = string.splitlines()
     lines = [x.strip() for x in lines]
