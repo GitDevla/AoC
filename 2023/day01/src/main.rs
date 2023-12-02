@@ -1,5 +1,3 @@
-use core::num;
-
 use common;
 const INPUT_FILE: &str = "input/day01.txt";
 

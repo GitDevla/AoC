@@ -8,7 +8,7 @@ fn main() {
 
 fn pt1() {
     // Test
-    assert_eq!(task1(), ());
+    assert_eq!(task1("".to_string()), 1);
 
     // Solution
     let input: Vec<String> = common::read_file(INPUT_FILE);
@@ -20,7 +20,7 @@ fn pt1() {
 
 fn pt2() {
     // Test
-    assert_eq!(task2(), ());
+    assert_eq!(task2("".to_string()), 1);
 
     // Solution
     let input: Vec<String> = common::read_file(INPUT_FILE);
@@ -30,6 +30,10 @@ fn pt2() {
     println!("Task 2 solution: {ans}");
 }
 
-fn task1(input: String) -> () {}
+fn task1(input: String) -> i32 {
+    0
+}
 
-fn task2(input: String) -> () {}
+fn task2(input: String) -> i32 {
+    0
+}
