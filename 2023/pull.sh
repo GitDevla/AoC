@@ -34,7 +34,6 @@ function create_new_project(){
     echo -e "\t\"day$DAY\",\n]" >> Cargo.toml
 }
 
-
 download_latest_input
 create_new_project
 echo "https://adventofcode.com/$YEAR/day/$day"
