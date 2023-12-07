@@ -1,18 +1,10 @@
 [package]
-name = "aoc2023"
+name = "day07"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[workspace]
-members = [
-    "common",
-    "day01",
-    "day02",
-    "day03",
-	"day04",
-	"day05",
-	"day06",
-	"day07",
-]
+[dependencies]
+common = {path="../common"}
+regex = "1.10.2"
