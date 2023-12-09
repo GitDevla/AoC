@@ -28,7 +28,6 @@ function create_new_project(){
 
     
     cp common/src/blank.rs day$DAY/src/main.rs
-    sed -i "s/dayXX.txt/day$DAY.txt/g" day$DAY/src/main.rs
     echo 'common = {path="../common"}' >> day$DAY/Cargo.toml
     sed -i '$ d' Cargo.toml
     echo -e "\t\"day$DAY\",\n]" >> Cargo.toml

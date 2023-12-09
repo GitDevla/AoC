@@ -1,5 +1,5 @@
-use common;
-const INPUT_FILE: &str = "input/dayXX.txt";
+use common::{self, AOCInput};
+const DAY: &str = env!("CARGO_PKG_NAME");
 
 fn main() {
     pt1();
@@ -8,32 +8,26 @@ fn main() {
 
 fn pt1() {
     // Test
-    assert_eq!(task1("".to_string()), 1);
+    AOCInput::test("").solve(task1).check(1);
 
     // Solution
-    let input: Vec<String> = common::read_file(INPUT_FILE);
-    let input: String = input.first().unwrap().to_string();
-
-    let ans = task1(input);
+    let ans = AOCInput::input(DAY).solve(task1).unwrap();
     println!("Task 1 solution: {ans}");
 }
 
 fn pt2() {
     // Test
-    assert_eq!(task2("".to_string()), 1);
+    AOCInput::test("").solve(task2).check(1);
 
     // Solution
-    let input: Vec<String> = common::read_file(INPUT_FILE);
-    let input: String = input.first().unwrap().to_string();
-
-    let ans = task2(input);
-    println!("Task 2 solution: {ans}");
+    let ans = AOCInput::input(DAY).solve(task2).unwrap();
+    println!("Task 1 solution: {ans}");
 }
 
-fn task1(input: String) -> i32 {
+fn task1(input: Vec<String>) -> i32 {
     0
 }
 
-fn task2(input: String) -> i32 {
+fn task2(input: Vec<String>) -> i32 {
     0
 }
