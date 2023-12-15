@@ -6,6 +6,7 @@ YEAR=$(date +%Y)
 
 if [[ $# -eq 1 ]]; then
     DAY=$1
+    day=$(echo $DAY | sed 's/^0*//')
 fi
 
 function download_latest_input() {
