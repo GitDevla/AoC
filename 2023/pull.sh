@@ -4,6 +4,10 @@ DAY=$(date +%d)
 day=$(echo $DAY | sed 's/^0*//')
 YEAR=$(date +%Y)
 
+if [[ $# -eq 1 ]]; then
+    DAY=$1
+fi
+
 function download_latest_input() {
     if [[ -f "input/day$DAY.txt" ]]; then
         echo "Input already downloaded"
