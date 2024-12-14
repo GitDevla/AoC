@@ -47,33 +47,31 @@ EEEEE"""
 
 DIRECTIONS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
-def count_steps(input, start):
+def floodfill(input, start):
     node = input[start[0]][start[1]]
-    area = []
-    circumference = []
+    area = set()
+    circumference = 0
     queue = [start]
-    seen = set()
     while len(queue)>0:
         y,x = queue.pop(0)
         if y<0 or y>=len(input) or x<0 or x>=len(input[y]):
-            circumference.append((y,x))
+            circumference+=1
             continue
 
-        if (y,x) in seen:
+        if (y,x) in area:
             continue
         curr = input[y][x]
 
         if curr != node:
-            circumference.append((y,x))
+            circumference+=1
             continue
         if curr == "#":
             continue
-        area.append((y,x))
+        area.add((y,x))
         input[y][x] = "#"
-        seen.add((y,x))
         for d in DIRECTIONS:
             queue.append((y+d[0], x+d[1]))
-    return node, area, circumference
+    return area, circumference
             
 
 def task1(input):
@@ -81,51 +79,52 @@ def task1(input):
     for y in range(len(input)):
         for x in range(len(input[y])):
             if input[y][x] != "#":
-                node, area, circumference= count_steps(input, (y, x))
-                all += len(area)*len(circumference)
+                area, circumference= floodfill(input, (y, x))
+                all += len(area)*circumference
 
     return all
 
       
 
-def count_sides(area_positions,size):
-    tempmap = [[0 for _ in range(0,size[1])] for _ in range(0,size[0])]
+def count_sides(area_positions):
+    min_size = (min([y for y,_ in area_positions]), min([x for _,x in area_positions]))
+    size = (max([y for y,_ in area_positions])+1, max([x for _,x in area_positions])+1)
+    size = (size[0]-min_size[0], size[1]-min_size[1])
+    tempmap = [[False for _ in range(0,size[1])] for _ in range(0,size[0])]
     for y,x in area_positions:
-        tempmap[y][x] = 1
-    
-    threwsholded_matrix = [[0 for _ in range(0,size[1]+1)] for _ in range(0,size[0]+1)]
+        y -= min_size[0]
+        x -= min_size[1]
+        tempmap[y][x] = True
+        
+    sum = 0
     for y in range(0,size[0]+1):
         for x in range(0,size[1]+1):
-            threwsholded_matrix[y][x] = numberOfEdges(tempmap, (y,x))
+            sum += numberOfEdges(tempmap, (y,x))
 
-    sum = 0
-    for y in range(0,len(threwsholded_matrix)):
-        for x in range(0,len(threwsholded_matrix[y])):
-            sum += threwsholded_matrix[y][x]
     return sum
             
     
 def numberOfEdges(matrix, pos):
     y,x = pos
-    edges = 0
+    blocks = 0
     for dy in range(-1,1):
         for dx in range(-1,1):
             ny = y+dy
             nx = x+dx
             if ny<0 or ny>=len(matrix) or nx<0 or nx>=len(matrix[ny]):
                 continue
-            if matrix[ny][nx] == 1:
-                edges += 1
-    if edges ==3 or edges == 1:
+            if matrix[ny][nx]:
+                blocks += 1
+    if blocks ==3 or blocks == 1:
         return 1
-    if edges == 4:
+    if blocks == 4:
         return 0
 
     if y-1<0 or x-1<0 or y>=len(matrix) or x>=len(matrix[y]):
         return 0
-    if matrix[y][x] == 1 and matrix[y-1][x-1] ==1:
+    if matrix[y][x] and matrix[y-1][x-1]:
         return 2
-    if matrix[y][x-1] == 1 and matrix[y-1][x] ==1:
+    if matrix[y][x-1] and matrix[y-1][x]:
         return 2
     return 0
     
@@ -135,8 +134,8 @@ def task2(input):
     for y in range(len(input)):
         for x in range(len(input[y])):
             if input[y][x] != "#":
-                node, area, circumference= count_steps(input, (y, x))
-                all += len(area)*count_sides(area,(len(input), len(input[0])))
+                area, _= floodfill(input, (y, x))
+                all += len(area)*count_sides(area)
 
     return all
 
@@ -144,5 +143,5 @@ def parse(input):
     return [[x for x in row] for row in input]
 
 if __name__ == "__main__":
-    # benchmark(main)
-    main()
+    benchmark(main)
+    # main()
