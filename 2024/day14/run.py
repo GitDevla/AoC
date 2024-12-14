@@ -43,8 +43,8 @@ def pt2():
     # Solution
     input = read_file(FILE)
     input = parse(input)
-    task2(input)
-    print(f"Task 2 solution: fuck you")
+    
+    print(f"Task 2 solution: {task2(input)}")
 
 
 #########################################################
@@ -73,29 +73,25 @@ def task1(input):
     return sum
 
 
-def task2(inputt):
+def task2(input):
     size = (101,103)
-    after_sim = []
 
-    for t in range(5000,10000):
-        for r in inputt:
-            after_sim.append(calulate_pos(r, t, size))
-        display = [[0 for x in range(size[0])] for y in range(size[1])]
-        for x in range(size[0]):
-            for y in range(size[1]):
-                if (x,y) in after_sim:
-                    display[y][x] = 1
-        
-        ## save the matrix as an image
-        from PIL import Image
-        img = Image.new('RGB', (size[0], size[1]), color = 'white')
-        for x in range(size[0]):
-            for y in range(size[1]):
-                if display[y][x] == 1:
-                    img.putpixel((x,y), (0,0,0))
-        img.save(f"day14/output/{t}.png")
-
+    for t in range(10000):
         after_sim = []
+        for r in input:
+            after_sim.append(calulate_pos(r, t, size))
+        
+        x_pos = [x[0] for x in after_sim]
+        y_pos = [x[1] for x in after_sim]
+        x_mean = sum(x_pos)/len(x_pos)
+        y_mean = sum(y_pos)/len(y_pos)
+        x_var = sum([(x - x_mean)**2 for x in x_pos])/len(x_pos)
+        y_var = sum([(y - y_mean)**2 for y in y_pos])/len(y_pos)
+        var = x_var + y_var
+        if var < 1000:
+            return t
+
+    return "fuck you"
 
 import re
 def parse(input):
@@ -111,5 +107,5 @@ def parse(input):
 
 
 if __name__ == "__main__":
-    # benchmark(main)
-    main()
+    benchmark(main)
+    # main()
