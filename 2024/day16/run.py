@@ -117,27 +117,26 @@ def findEnd(map):
 
 from queue import PriorityQueue
 def findPath(map, playerPos, end):
-    DIRS = [(0,1),(0,-1),(1,0),(-1,0)]
     player = (0,playerPos,(1,0))
     queue = PriorityQueue()
     queue.put(player)
     seen = {}
     while not queue.empty():
         score,pos,dir = queue.get()
-        if (pos,dir) in seen.keys():
-            if seen[pos,dir] <= score:
-                continue
+        
+        if seen.get((pos,dir),math.inf) <= score:
+            continue
         seen[pos,dir] = score
+
         if pos == end:
             return score
+        
         lookahead = (pos[0]+dir[0],pos[1]+dir[1])
         if map[lookahead[1]][lookahead[0]] != "#":
             queue.put((score+1,lookahead,dir))
-        for d in DIRS:
-            if [x*-1 for x in d] == list(dir):
-                continue
-            if d == dir:
-                continue
+
+        for d in [(dir[1],dir[0]),(dir[1]*-1,dir[0]*-1)]:
+            if map[pos[1]+d[1]][pos[0]+d[0]] == "#": continue
             queue.put((score+1000,pos,d))
     return -1
 
@@ -160,26 +159,27 @@ def findPathSquares(map, playerPos, end):
         score,pos,dir,prev = queue.get()
         if score > limit:
             continue
-        px,py,pdx,pdy = prev
-        if seen.get((pos,dir),math.inf) < score: continue
-        if seen.get((pos,dir),score) != score:
-            backtrack[pos,dir].clear()
-        seen[pos,dir] = score
+        if seen.get((pos,dir),math.inf) < score: continue # ignore bad scoring paths
 
+        px,py,pdx,pdy = prev
         backtrack[pos,dir].add(((px,py),(pdx,pdy)))
 
         if pos == end:
             limit = score
             continue
+
+        if seen.get((pos,dir),math.inf) == score: continue # don't retrack same performing paths
+        seen[pos,dir] = score
+
         lookahead = (pos[0]+dir[0],pos[1]+dir[1])
         if map[lookahead[1]][lookahead[0]] != "#":
             queue.put((score+1,lookahead,dir,(pos[0],pos[1],dir[0],dir[1])))
-        turnDir = (dir[1],dir[0])
-        oppositeDir = (turnDir[0]*-1,turnDir[1]*-1)
-        for d in [turnDir,oppositeDir]:
+
+        for d in [(dir[1],dir[0]),(dir[1]*-1,dir[0]*-1)]:
+            if map[pos[1]+d[1]][pos[0]+d[0]] == "#": continue
             if seen.get((pos,d),math.inf) < score+1000: continue
             queue.put((score+1000,pos,d,(pos[0],pos[1],dir[0],dir[1])))
-
+            
     curr = set()
     for d in [(1,0),(0,1),(-1,0),(0,-1)]:
         curr.add(((end[0],end[1]),(d[0],d[1])))
