@@ -6,15 +6,7 @@ from utils.utils import *
 
 FILE = "input/day18.txt"
 
-
-def main():
-    pt1()
-    pt2()
-
-
-def pt1():
-    # Test
-    test_input="""5,4
+TEST_INPUT ="""5,4
 4,2
 4,5
 3,0
@@ -39,7 +31,15 @@ def pt1():
 0,5
 1,6
 2,0"""
-    test_input = parse(read_test(test_input))
+
+def main():
+    pt1()
+    pt2()
+
+
+def pt1():
+    # Test
+    test_input = parse(read_test(TEST_INPUT))
     test(task1(test_input), 22)
 
     # # Solution
@@ -50,33 +50,8 @@ def pt1():
 
 def pt2():
     # Test
-    test_input="""5,4
-4,2
-4,5
-3,0
-2,1
-6,3
-2,4
-1,5
-0,6
-3,3
-2,6
-5,1
-1,2
-5,5
-2,5
-6,5
-1,4
-0,4
-6,4
-1,1
-6,1
-1,0
-0,5
-1,6
-2,0"""
-    test_input = parse(read_test(test_input))
-    test(task2(test_input), (6,1))
+    test_input = parse(read_test(TEST_INPUT))
+    test(task2(test_input), "6,1")
 
     # Solution
     input = read_file(FILE)
@@ -120,10 +95,14 @@ def task1(input,size=7,limit=12):
 def task2(input,size=7):
     start = (0,0)
     end = (size-1,size-1)
-    for l in range(len(input)):
+    range = [0,len(input)]
+    while range[0] < range[1]:
+        l = (range[0]+range[1])//2
         if bfs(start,end,set(input[:l])) == -1:
-            return input[l-1]
-    return -1
+            range[1] = l
+        else:
+            range[0] = l+1
+    return ",".join(map(str,input[range[0]-1]))
 
 def parse(input):
     blocks = []
