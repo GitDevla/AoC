@@ -37,7 +37,7 @@ Register C: 0
 Program: 0,3,5,4,3,0"""
     test_input = parse(read_test(test_input))
     # test(task2(test_input),117440)
-    
+
     # Solution
     input = read_file(FILE)
     input = parse(input)
@@ -54,7 +54,6 @@ def combo_operand(register,combo):
         return register[1]
     if combo == 6:
         return register[2]
-    Exception("Invalid combo operand")
     
 
 def run_program(registers,ops):
@@ -65,23 +64,23 @@ def run_program(registers,ops):
         literal_op = ops[instruction_counter+1]
         combo = combo_operand(registers,literal_op)
         if op == 0:
-            registers[0] = registers[0] // 2**combo
+            registers[0] = registers[0] >> combo
         elif op == 1:
-            registers[1] = registers[1] ^ literal_op
+            registers[1] ^= literal_op
         elif op == 2:
-            registers[1] = combo % 8
+            registers[1] = combo & 7
         elif op == 3:
             if registers[0] != 0:
                 instruction_counter = literal_op
                 continue
         elif op == 4:
-            registers[1] = registers[1] ^ registers[2]
+            registers[1] ^= registers[2]
         elif op == 5:
-            output.append(combo%8)
+            output.append(combo&7)
         elif op == 6:
-            registers[1] = registers[0] // 2**combo
+            registers[1] = registers[0] >> combo
         elif op == 7:
-            registers[2] = registers[0] // 2**combo
+            registers[2] = registers[0] >> combo
         instruction_counter +=2
     return output
 
@@ -89,44 +88,26 @@ def task1(input):
     return ",".join(map(str,run_program(input[0],input[1])))
 
 
-def find_program(registers,ops):
-    first = registers[0]
-    instruction_counter = 0
-    output = []
-    target = ops.copy()
-    while instruction_counter < len(ops):
-        op = ops[instruction_counter]
-        literal_op = ops[instruction_counter+1]
-        combo = combo_operand(registers,literal_op)
-        if op == 0:
-            registers[0] = registers[0] // 2**combo
-        elif op == 1:
-            registers[1] = registers[1] ^ literal_op
-        elif op == 2:
-            registers[1] = combo % 8
-        elif op == 3:
-            if registers[0] != 0:
-                instruction_counter = literal_op
-                continue
-        elif op == 4:
-            registers[1] = registers[1] ^ registers[2]
-        elif op == 5:
-            if len(target) == 0:
-                return False
-            asd = target.pop(0)
-            if combo%8 != asd:
-                return False
-            # else:
-            #     print(f"A:{first} {asd}")
-        elif op == 6:
-            registers[1] = registers[0] // 2**combo
-        elif op == 7:
-            registers[2] = registers[0] // 2**combo
-        instruction_counter +=2
-    return len(target) == 0
+def find_program(target,ans=0):
+    if len(target) == 0:
+        return ans
+    for t in range(8):
+        a = (ans<<3) | t
+        b = a & 7
+        b = b ^ 5
+        c = a >> b
+        a = a >> 3
+        b = b ^ 6
+        b = b ^ c
+
+        if b&7 == target[-1]:
+            sub = find_program(target[:-1],(ans<<3) + t)
+            if sub is None: continue
+            return sub
+
 
 def task2(input):
-    pass
+    return find_program(input[1])
 
 def parse(input):
     A = int(input[0].split(": ")[1])
@@ -136,5 +117,5 @@ def parse(input):
     return [A, B, C], program
 
 if __name__ == "__main__":
-    # benchmark(main)
-    main()
+    benchmark(main)
+    # main()
