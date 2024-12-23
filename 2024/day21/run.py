@@ -1,4 +1,5 @@
 from collections import deque
+from functools import cache
 import sys
 from pathlib import Path
 
@@ -29,7 +30,7 @@ def pt1():
 
 def pt2():
     # Test
-    test(1, 1)
+    test(task2(["029A"]), 2379451789590)
 
     # Solution
     input = read_file(FILE)
@@ -38,15 +39,7 @@ def pt2():
 
 #########################################################
 
-def movement_changes(movements):
-    changes = 0
-    for i in range(1,len(movements)):
-        if movements[i] != movements[i-1]:
-            changes+=1
-    return changes
-
-
-def find_moves(map,start_pos,end_pos):
+def find_moves2(map,start_pos,end_pos):
     robot = (start_pos,"")
     queue = deque([robot])
     best_moves = []
@@ -59,7 +52,7 @@ def find_moves(map,start_pos,end_pos):
         if pos == end_pos:
             best_moves.append(moves)
             continue
-        dirs = [(0,-1),(1,0),(0,1),(-1,0)]
+        dirs = [(0,-1),(0,1),(-1,0),(1,0)]
         for i,(dx,dy) in enumerate(dirs):
             nx = x+dx
             ny = y+dy
@@ -69,56 +62,50 @@ def find_moves(map,start_pos,end_pos):
                 continue
             if map[ny][nx] == "#":
                 continue
-            new_moves = moves + "^>v<"[i]
+            new_moves = moves + "^v<>"[i]
             queue.append(((nx,ny),new_moves))
-    sorted_moves = sorted(best_moves,key=lambda x: (-movement_changes(x)))
-    return sorted_moves[-1]
+    return best_moves
 
-def convert_dirs_to_sequence(dirs):
-    sequence = []
-    for i in range(4):
-        for _ in range(dirs[i]):
-            sequence.append("<v>^"[i])
-    return sequence
+def generate_code_sequence(start_seqence,depth):
+    return recursive_move_count("".join(start_seqence),depth+1)
 
-def find_sequence(map,sequence):
-    new_sequence = []
-    start_pos = None
-    for y in range(len(map)):
-        for x in range(len(map[0])):
-            if map[y][x] == "A":
-                start_pos = (x,y)
-    while len(sequence) > 0:
-        end_char = sequence.pop(0)
-        end_pos = None
+keypad = [
+    ["7", "8", "9"],
+    ["4", "5", "6"],
+    ["1", "2", "3"],
+    ["#", "0", "A"]
+]
+
+robotmap = [
+    ["#","^","A"],
+    ["<","v",">"]
+]
+
+@cache
+def recursive_move_count(seq, depth):
+    map = keypad
+    if any([c in seq for c in "<^>v"]):
+        map = robotmap
+    if depth == 0:
+        return len(seq)
+    summa =0
+    for a,b in zip("A"+seq,seq):
+        start=None
+        end=None
         for y in range(len(map)):
             for x in range(len(map[0])):
-                if map[y][x] == end_char:
-                    end_pos = (x,y)
-        robot = find_moves(map,start_pos,end_pos)
-        start_pos = end_pos
-        new_sequence += robot
-        new_sequence += ["A"]
-    return new_sequence
+                if map[y][x] == a:
+                    start = (x,y)
+                if map[y][x] == b:
+                    end = (x,y)
+        ms = find_moves2(map,start,end)
+        optimal = float("inf")
+        for m in ms:
+            v = recursive_move_count(m+"A",depth-1)
+            optimal = min(optimal,v)
+        summa += optimal
+    return summa
 
-def generate_code_sequence(start_seqence):
-    keypad = [
-        ["7", "8", "9"],
-        ["4", "5", "6"],
-        ["1", "2", "3"],
-        ["#", "0", "A"]
-    ]
-    robotmap = [
-        ["#","^","A"],
-        ["<","v",">"]
-    ]
-    sequence = list(start_seqence)
-    sequence = find_sequence(keypad,sequence)
-    for _ in range(2):
-        sequence = find_sequence(robotmap,sequence)
-
-
-    return "".join(sequence)
 
 def code_to_num(code):
     num = ""
@@ -129,25 +116,24 @@ def code_to_num(code):
 
 def task1(input):
     sum = 0
-
     for seq in input:
-        n = generate_code_sequence(seq)
-        c = code_to_num(seq)
-        sum += c * len(n)  
-    
+        sum += complexity(seq,2)
     return sum
         
-def complexity(sequence):
-    n = generate_code_sequence(sequence)
+def complexity(sequence,depth=2):
+    n = generate_code_sequence(sequence,depth)
     c = code_to_num(sequence)
-    return c * len(n)
+    return c * n
 
 def task2(input):
-    pass
+    sum = 0
+    for seq in input:
+        sum += complexity(seq,25)
+    return sum
 
 
 if __name__ == "__main__":
-    # benchmark(main)
-    main()
+    benchmark(main)
+    # main()
 
 
