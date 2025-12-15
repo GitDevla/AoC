@@ -1,6 +1,5 @@
 from collections import Counter
 import heapq
-import re
 import sys
 from pathlib import Path
 

@@ -1,6 +1,4 @@
-from collections import Counter
 import heapq
-import re
 import sys
 from pathlib import Path
 
@@ -65,13 +63,7 @@ def parse(input):
 
 
 def size(x, y):
-    minX = min(x[0], y[0])
-    maxX = max(x[0], y[0]) + 1
-    minY = min(x[1], y[1])
-    maxY = max(x[1], y[1]) + 1
-    a = maxX - minX
-    b = maxY - minY
-    return a * b
+    return (abs(x[0] - y[0]) + 1) * (abs(x[1] - y[1]) + 1)
 
 
 def task1(input):
@@ -140,5 +132,5 @@ def polygon_intersect(poly1, poly2):
 
 
 if __name__ == "__main__":
-    # benchmark(main)
-    main()
+    benchmark(main)
+    # main()
