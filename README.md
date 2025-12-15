@@ -10,3 +10,4 @@ My [Advent of Code](https://adventofcode.com) solutions written in whatever I wa
 | **2022** | 37 ⭐          |  Javascript  |   22/12   |
 | **2023** | In Progress... |     Rust     |   23/12   |
 | **2024** | 50 ⭐          |    Python    |   24/12   |
+| **2025** | 24 ⭐          |    Python    |   25/12   |
